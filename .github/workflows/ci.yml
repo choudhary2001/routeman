@@ -1,0 +1,32 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # oldest supported Python with old framework versions
+          - python: "3.9"
+            deps: >-
+              "django==3.2.*" "djangorestframework==3.12.*" "djangorestframework-simplejwt==4.8.*"
+              "django-filter==21.1" "channels==3.0.*" "setuptools<70" "flask==2.0.*" "werkzeug==2.0.*"
+              "flask-jwt-extended==4.4.*" "marshmallow==3.14.*" "fastapi==0.95.*" "pydantic==1.10.*"
+              "uvicorn==0.22.*" "httpx==0.24.*" "python-multipart==0.0.6" "email-validator==2.0.*"
+              "jsonschema==4.17.*"
+          - python: "3.11"
+            deps: django djangorestframework djangorestframework-simplejwt django-filter channels flask flask-jwt-extended marshmallow fastapi pydantic uvicorn httpx python-multipart email-validator jsonschema
+          - python: "3.13"
+            deps: django djangorestframework djangorestframework-simplejwt django-filter channels flask flask-jwt-extended marshmallow fastapi pydantic uvicorn httpx python-multipart email-validator jsonschema
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install -e . pytest ${{ matrix.deps }}
+      - run: python -m pytest -q
