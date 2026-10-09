@@ -1,6 +1,11 @@
-# routeman
+# routeman: convert your Python API to a Postman collection
 
-**Generate a complete Postman collection from your Django, Django REST framework, Flask or FastAPI project with one command. You don't need OpenAPI, drf-spectacular, flasgger or any other documentation library.**
+[![PyPI version](https://img.shields.io/pypi/v/routeman.svg)](https://pypi.org/project/routeman/)
+[![Python versions](https://img.shields.io/pypi/pyversions/routeman.svg)](https://pypi.org/project/routeman/)
+[![License: MIT](https://img.shields.io/pypi/l/routeman.svg)](https://github.com/choudhary2001/routeman/blob/main/LICENSE)
+[![tests](https://github.com/choudhary2001/routeman/actions/workflows/ci.yml/badge.svg)](https://github.com/choudhary2001/routeman/actions/workflows/ci.yml)
+
+**routeman converts your Django, Django REST framework (DRF), Flask or FastAPI API into a ready-to-use Postman collection and Postman environment with one command. It includes every endpoint, method, path variable, query parameter, request body, authentication method and login token. You don't need OpenAPI, Swagger, drf-spectacular, drf-yasg, flasgger or any other documentation library.**
 
 ```bash
 pip install routeman
@@ -18,7 +23,9 @@ routeman generate
 
 routeman loads your application the same way your server does and reads its real routes. You get every endpoint with its methods, path variables, query parameters and request bodies filled with working example values, plus authentication and a login request that saves the token for you. Import the two files into Postman and start sending requests.
 
-Made by [Swastik Tech Solutions Pvt Ltd](https://swastik.ai).
+Use it to export a Python REST API to Postman, to share an API with your frontend or QA team, to onboard new developers, or to smoke-test every endpoint with the Postman Collection Runner or Newman.
+
+Made by [Shwastik Tech Solutions Pvt Ltd](https://swastik.ai).
 
 ---
 
@@ -114,6 +121,26 @@ Tested with Django 3.2 to 6, Django REST framework 3.12+, Flask 2.0 to 3.x, Fast
 * Django form views (session/CSRF): send any GET first so Postman receives the `csrftoken` cookie. The collection copies it into the `X-CSRFToken` header for you.
 * Regenerate whenever your API changes. Collection and request ids are stable, so importing again replaces the previous version.
 
+## FAQ
+
+**How do I convert a Django REST framework API to a Postman collection?**
+Install routeman in the virtualenv of your project, then run `routeman generate` in the folder that contains `manage.py`. Import the generated `.postman_collection.json` and `.postman_environment.json` files in Postman with *File → Import*.
+
+**How do I export a Flask or FastAPI API to Postman?**
+Run `routeman generate --app main:app` (or `--app myapp:create_app()` for an app factory). routeman usually finds the app by itself, so a plain `routeman generate` often works.
+
+**Do I need Swagger or an OpenAPI schema?**
+No. routeman reads the routes, serializers, forms, schemas and view code directly. For Django and Flask you don't need drf-spectacular, drf-yasg, flasgger or apispec. For FastAPI, routeman uses the OpenAPI document FastAPI already builds and adds the routes FastAPI hides from it.
+
+**Does it work with JWT or token authentication?**
+Yes. routeman detects Bearer/JWT (Simple JWT, flask-jwt-extended, OAuth2), DRF `Token`, Knox, Basic, API key and session authentication. It also adds a script to the login request that saves the token, so every other request is authenticated.
+
+**Can I run the collection in CI?**
+Yes. Every request has a test that fails on a 5xx response, so `newman run postman/<name>.postman_collection.json -e postman/<name>.local.postman_environment.json` smoke-tests your whole API.
+
+**Is it safe to run on my project?**
+Yes. routeman imports your app to read its routes, the same way your server does, but it never writes to your database and never sends HTTP requests.
+
 ## License
 
-MIT © [Swastik Tech Solutions Pvt Ltd](https://swastik.ai)
+MIT © [Shwastik Tech Solutions Pvt Ltd](https://swastik.ai). Issues and pull requests are welcome on [GitHub](https://github.com/choudhary2001/routeman).

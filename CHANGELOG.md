@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 - 2026-10-09
+
+* Package metadata and documentation only: company name corrected to Shwastik Tech Solutions Pvt Ltd,
+  clearer PyPI description and keywords, project links to GitHub (source, issues, changelog), README FAQ.
+
 ## 0.1.0 - 2026-10-08
 
 First release.
